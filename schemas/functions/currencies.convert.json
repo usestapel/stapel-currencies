@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "currencies.convert",
+  "description": "Convert an amount between two currencies via the configured base-currency cross rate. Amounts are decimal strings on the wire (Decimal internally, floats never). Returns {\"amount\": \"<decimal string>\"} quantized to STAPEL_CURRENCIES['CONVERSION_DECIMAL_PLACES']. Unknown or inactive codes fail with error.400.unknown_currency.",
+  "type": "object",
+  "properties": {
+    "amount": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+      "description": "Amount to convert, as a decimal string (e.g. \"100.00\")."
+    },
+    "from_currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 code of the source currency."
+    },
+    "to_currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 code of the target currency."
+    }
+  },
+  "required": ["amount", "from_currency", "to_currency"],
+  "additionalProperties": false
+}
