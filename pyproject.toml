@@ -4,22 +4,36 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stapel-currencies"
-version = "0.1.0"
+version = "0.1.1"
 description = "Currencies and exchange rates for the Stapel framework"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
 keywords = ["django", "stapel", "currencies"]
 classifiers = [
+    "Development Status :: 4 - Beta",
     "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
 ]
 dependencies = [
     "stapel-core>=0.3.0,<0.4",
     "celery>=5",
     "requests>=2.28",
 ]
+
+[project.urls]
+Homepage = "https://github.com/usestapel/stapel-currencies"
+Repository = "https://github.com/usestapel/stapel-currencies"
+Documentation = "https://github.com/usestapel/stapel-currencies#readme"
+Changelog = "https://github.com/usestapel/stapel-currencies/blob/main/CHANGELOG.md"
+Issues = "https://github.com/usestapel/stapel-currencies/issues"
 
 [project.optional-dependencies]
 all = []
@@ -31,11 +45,18 @@ packages = [
     "stapel_currencies.migrations",
     "stapel_currencies.management",
     "stapel_currencies.management.commands",
-    "stapel_currencies.tests",
 ]
 
 [tool.setuptools.package-data]
 stapel_currencies = ["py.typed", "migrations/*.py", "schemas/**/*.json"]
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+# Single source for the git hooks and CI (they pass the same flags on the CLI).
+select = ["E", "F", "W"]
+ignore = ["E501"]
 
 [tool.pytest.ini_options]
 django_find_project = false
