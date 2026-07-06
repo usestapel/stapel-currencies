@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stapel-currencies"
-version = "0.1.1"
+version = "0.1.2"
 description = "Currencies and exchange rates for the Stapel framework"
 readme = "README.md"
 license = { text = "MIT" }
@@ -23,7 +23,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "stapel-core>=0.3.0,<0.4",
+    "stapel-core>=0.8,<0.9",
     "celery>=5",
     "requests>=2.28",
 ]
