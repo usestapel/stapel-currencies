@@ -28,6 +28,25 @@ Money/rate discipline: **strings on the wire, `Decimal` internally, floats never
 Conversion results are quantized to `CONVERSION_DECIMAL_PLACES` (ROUND_HALF_UP);
 intermediate cross-rate math keeps full precision.
 
+## Admin categories (AS-5 `@access` review)
+
+`models.py` has exactly one model, `Currency`, and it is left **undecorated**
+(implicit `@access.standard` — business/domain table, matching the doc's `Category`
+example): it is a curated reference/lookup catalog that staff read and correct by hand
+through `CurrencyAdmin` (rate corrections, `is_active` toggling) — the opposite of
+ops-junk nobody is expected to touch. It carries no token/secret/credential field, so
+`@access.secret` does not apply either.
+
+Checked the rest of the module for a hiding ops/secret candidate before concluding
+zero-decorator: the ECB rate provider (`providers.py`) is a stateless, unauthenticated
+HTTP GET against a public XML feed — no API key, no persisted request/response log, no
+dedup/idempotency table. `update_exchange_rates` (`services.py`, the management command,
+and the Celery task) mutates existing `Currency` rows in place and does not write any
+audit/delivery-log or TTL-expiring row. There is no second model anywhere in the repo
+(`grep -rn "models.Model"` returns only `Currency`). Nothing else to classify.
+
+Disputed: none.
+
 ## Extension points (fork-free)
 
 ### Settings — `STAPEL_CURRENCIES` namespace (`conf.py`)
