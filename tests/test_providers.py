@@ -47,7 +47,9 @@ def _mock_get(monkeypatch, text, status_ok=True):
 
 
 class TestECBRateProvider:
+    @override_settings(STAPEL_CURRENCIES={"BASE_CURRENCY": "EUR"})
     def test_parses_rates_as_decimals(self, monkeypatch):
+        # The ECB feed is natively EUR-relative — this is the no-rebase path.
         calls = _mock_get(monkeypatch, ECB_XML)
         rates = ECBRateProvider().fetch_rates()
         assert rates == {
@@ -58,6 +60,7 @@ class TestECBRateProvider:
         assert all(isinstance(rate, Decimal) for rate in rates.values())
         assert calls == [(ECBRateProvider.url, 30)]
 
+    @override_settings(STAPEL_CURRENCIES={"BASE_CURRENCY": "EUR"})
     def test_unparseable_rate_is_skipped(self, monkeypatch):
         _mock_get(monkeypatch, ECB_XML_BAD_RATE)
         rates = ECBRateProvider().fetch_rates()

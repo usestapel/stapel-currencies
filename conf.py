@@ -13,25 +13,25 @@ from stapel_core.conf import AppSettings
 # Seed list for the ``load_default_currencies`` management command.
 # ``value`` is the exchange rate relative to ``BASE_CURRENCY`` — decimal
 # strings, never floats. These are bootstrap placeholders that assume the
-# default EUR base; run ``update_exchange_rates`` (or schedule the Celery
+# default USD base; run ``update_exchange_rates`` (or schedule the Celery
 # task) to replace them with live rates from the configured provider.
 DEFAULT_CURRENCIES = [
-    {"code": "EUR", "display_name": "currency.eur", "symbol": "€", "value": "1.0"},
-    {"code": "GBP", "display_name": "currency.gbp", "symbol": "£", "value": "0.85"},
-    {"code": "CHF", "display_name": "currency.chf", "symbol": "CHF", "value": "0.94"},
-    {"code": "PLN", "display_name": "currency.pln", "symbol": "zł", "value": "4.32"},
-    {"code": "CZK", "display_name": "currency.czk", "symbol": "Kč", "value": "25.0"},
-    {"code": "SEK", "display_name": "currency.sek", "symbol": "kr", "value": "11.5"},
-    {"code": "NOK", "display_name": "currency.nok", "symbol": "kr", "value": "11.8"},
-    {"code": "DKK", "display_name": "currency.dkk", "symbol": "kr", "value": "7.46"},
-    {"code": "HUF", "display_name": "currency.huf", "symbol": "Ft", "value": "395.0"},
-    {"code": "RON", "display_name": "currency.ron", "symbol": "lei", "value": "4.97"},
-    {"code": "BGN", "display_name": "currency.bgn", "symbol": "лв", "value": "1.96"},
-    {"code": "HRK", "display_name": "currency.hrk", "symbol": "kn", "value": "7.53"},
-    {"code": "RSD", "display_name": "currency.rsd", "symbol": "дин.", "value": "117.0"},
-    {"code": "UAH", "display_name": "currency.uah", "symbol": "₴", "value": "41.0"},
-    {"code": "RUB", "display_name": "currency.rub", "symbol": "₽", "value": "100.0"},
-    {"code": "USD", "display_name": "currency.usd", "symbol": "$", "value": "1.08"},
+    {"code": "USD", "display_name": "currency.usd", "symbol": "$", "value": "1.0"},
+    {"code": "EUR", "display_name": "currency.eur", "symbol": "€", "value": "0.93"},
+    {"code": "GBP", "display_name": "currency.gbp", "symbol": "£", "value": "0.79"},
+    {"code": "CHF", "display_name": "currency.chf", "symbol": "CHF", "value": "0.87"},
+    {"code": "PLN", "display_name": "currency.pln", "symbol": "zł", "value": "4.0"},
+    {"code": "CZK", "display_name": "currency.czk", "symbol": "Kč", "value": "23.15"},
+    {"code": "SEK", "display_name": "currency.sek", "symbol": "kr", "value": "10.65"},
+    {"code": "NOK", "display_name": "currency.nok", "symbol": "kr", "value": "10.93"},
+    {"code": "DKK", "display_name": "currency.dkk", "symbol": "kr", "value": "6.91"},
+    {"code": "HUF", "display_name": "currency.huf", "symbol": "Ft", "value": "365.74"},
+    {"code": "RON", "display_name": "currency.ron", "symbol": "lei", "value": "4.60"},
+    {"code": "BGN", "display_name": "currency.bgn", "symbol": "лв", "value": "1.81"},
+    {"code": "HRK", "display_name": "currency.hrk", "symbol": "kn", "value": "6.97"},
+    {"code": "RSD", "display_name": "currency.rsd", "symbol": "дин.", "value": "108.33"},
+    {"code": "UAH", "display_name": "currency.uah", "symbol": "₴", "value": "37.96"},
+    {"code": "RUB", "display_name": "currency.rub", "symbol": "₽", "value": "92.59"},
 ]
 
 currencies_settings = AppSettings(
@@ -39,7 +39,7 @@ currencies_settings = AppSettings(
     defaults={
         # ISO 4217 code every Currency.value rate is relative to.
         # The base currency itself always converts with rate 1.
-        "BASE_CURRENCY": "EUR",
+        "BASE_CURRENCY": "USD",
         # Dotted path to a stapel_currencies.providers.RateProvider
         # subclass — the exchange-rate source seam (single strategy,
         # REPLACE semantics).

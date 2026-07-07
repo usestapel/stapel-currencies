@@ -16,7 +16,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture(autouse=True)
-def catalog():
+def catalog(settings):
+    # This module's fixture rates are all relative to EUR — pin the base
+    # explicitly rather than relying on whatever STAPEL_CURRENCIES defaults to.
+    settings.STAPEL_CURRENCIES = {"BASE_CURRENCY": "EUR"}
     Currency.objects.create(code="EUR", display_name="currency.eur", value=Decimal("1"))
     Currency.objects.create(code="USD", display_name="currency.usd", value=Decimal("1.08"))
     Currency.objects.create(code="GBP", display_name="currency.gbp", value=Decimal("0.85"))

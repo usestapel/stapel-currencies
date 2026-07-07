@@ -9,7 +9,7 @@ below is verifiable against the code in this repo.
 
 - Package: `stapel-currencies` (PyPI), Python package `stapel_currencies`, Django app label `currencies`.
 - Depends on `stapel-core` only (plus `requests` for the ECB provider and `celery` for the rate-refresh task).
-- Provenance: ported from `legacy-catalog/currencies` with the base currency and rate
+- Provenance: ported from the legacy catalog's `currencies` app with the base currency and rate
   source turned into seams and a comm Function added (see CHANGELOG 0.1.0).
 
 ## What this module provides
@@ -58,9 +58,9 @@ same name → environment variable → default. All keys are read **lazily at ca
 
 | Key | Default | What it customizes |
 |---|---|---|
-| `BASE_CURRENCY` | `"EUR"` | ISO 4217 code every `Currency.value` rate is relative to. The base currency always converts with rate 1 (even if its stored `value` drifts). Changing it reinterprets stored rates — re-run `update_exchange_rates` after switching. |
+| `BASE_CURRENCY` | `"USD"` | ISO 4217 code every `Currency.value` rate is relative to. The base currency always converts with rate 1 (even if its stored `value` drifts). Changing it reinterprets stored rates — re-run `update_exchange_rates` after switching. |
 | `RATE_PROVIDER` | `"stapel_currencies.providers.ECBRateProvider"` | The exchange-rate source. In `import_strings` — resolved via `import_string`, must be a `RateProvider` subclass (enforced by `get_rate_provider()`). Single strategy, **REPLACE** semantics (dotted path), not a registry. |
-| `DEFAULT_CURRENCIES` | 16 European currencies (`conf.DEFAULT_CURRENCIES`) | Seed list read by `load_default_currencies`: dicts with `code` / `display_name` / `symbol` / `value` (rate vs `BASE_CURRENCY`, as a decimal **string**). Replaces the default list wholesale. |
+| `DEFAULT_CURRENCIES` | 16 major world currencies (`conf.DEFAULT_CURRENCIES`) | Seed list read by `load_default_currencies`: dicts with `code` / `display_name` / `symbol` / `value` (rate vs `BASE_CURRENCY`, as a decimal **string**). Replaces the default list wholesale. |
 | `CONVERSION_DECIMAL_PLACES` | `2` | Decimal places conversion results are quantized to (ROUND_HALF_UP) — in `services.convert` and the `currencies.convert` Function. |
 
 ### Rate providers (dotted-path swap)

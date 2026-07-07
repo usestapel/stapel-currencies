@@ -21,15 +21,15 @@ class TestLoadDefaultCurrencies:
     def test_seeds_empty_table_from_setting_default(self):
         out, _ = _run("load_default_currencies")
         assert Currency.objects.count() == 16
-        eur = Currency.objects.get(code="EUR")
-        assert eur.display_name == "currency.eur"
-        assert eur.symbol == "€"
-        assert eur.value == Decimal("1.0")
+        usd = Currency.objects.get(code="USD")
+        assert usd.display_name == "currency.usd"
+        assert usd.symbol == "$"
+        assert usd.value == Decimal("1.0")
         assert "16 created" in out
 
     def test_values_are_decimals(self):
         _run("load_default_currencies")
-        assert Currency.objects.get(code="USD").value == Decimal("1.08")
+        assert Currency.objects.get(code="EUR").value == Decimal("0.93")
 
     def test_non_empty_table_is_left_alone(self):
         Currency.objects.create(code="EUR", display_name="x", value=Decimal("9"))
@@ -42,7 +42,7 @@ class TestLoadDefaultCurrencies:
         Currency.objects.create(code="EUR", display_name="x", value=Decimal("9"))
         out, _ = _run("load_default_currencies", "--force")
         assert Currency.objects.count() == 16
-        assert Currency.objects.get(code="EUR").value == Decimal("1.0")
+        assert Currency.objects.get(code="EUR").value == Decimal("0.93")
         assert "15 created, 1 updated" in out
 
     @override_settings(

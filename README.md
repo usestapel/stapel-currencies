@@ -70,9 +70,9 @@ setting, or env var — resolved lazily):
 
 | Key | Default | Meaning |
 |---|---|---|
-| `BASE_CURRENCY` | `"EUR"` | ISO code all stored rates are relative to (base = 1). |
+| `BASE_CURRENCY` | `"USD"` | ISO code all stored rates are relative to (base = 1). |
 | `RATE_PROVIDER` | `"stapel_currencies.providers.ECBRateProvider"` | Dotted path to a `RateProvider` subclass — the rate-source seam. |
-| `DEFAULT_CURRENCIES` | 16 European currencies | Seed list for `load_default_currencies`. |
+| `DEFAULT_CURRENCIES` | 16 major world currencies | Seed list for `load_default_currencies`. |
 | `CONVERSION_DECIMAL_PLACES` | `2` | Quantization of conversion results (ROUND_HALF_UP). |
 
 ## HTTP API

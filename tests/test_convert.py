@@ -12,7 +12,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture(autouse=True)
-def catalog():
+def catalog(settings):
+    # This module's fixture rates are all relative to EUR — pin the base
+    # explicitly rather than relying on whatever STAPEL_CURRENCIES defaults to.
+    settings.STAPEL_CURRENCIES = {"BASE_CURRENCY": "EUR"}
     Currency.objects.create(code="EUR", display_name="currency.eur", value=Decimal("1"))
     Currency.objects.create(code="USD", display_name="currency.usd", value=Decimal("1.08"))
     Currency.objects.create(code="GBP", display_name="currency.gbp", value=Decimal("0.85"))
@@ -49,11 +52,15 @@ class TestConversionMath:
 
 
 class TestQuantizationSetting:
-    @override_settings(STAPEL_CURRENCIES={"CONVERSION_DECIMAL_PLACES": 4})
+    @override_settings(
+        STAPEL_CURRENCIES={"BASE_CURRENCY": "EUR", "CONVERSION_DECIMAL_PLACES": 4}
+    )
     def test_decimal_places_is_a_setting(self):
         assert convert(Decimal("100"), "USD", "GBP") == Decimal("78.7037")
 
-    @override_settings(STAPEL_CURRENCIES={"CONVERSION_DECIMAL_PLACES": 0})
+    @override_settings(
+        STAPEL_CURRENCIES={"BASE_CURRENCY": "EUR", "CONVERSION_DECIMAL_PLACES": 0}
+    )
     def test_zero_decimal_places(self):
         assert convert(Decimal("100"), "USD", "GBP") == Decimal("79")
 

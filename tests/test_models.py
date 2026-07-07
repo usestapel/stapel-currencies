@@ -19,19 +19,19 @@ def test_str_without_symbol():
 
 class TestBaseHelpers:
     def test_to_base_divides_by_rate(self):
-        usd = Currency(code="USD", value=Decimal("1.08"))
-        assert usd.to_base(Decimal("108")) == Decimal("100")
+        eur = Currency(code="EUR", value=Decimal("1.08"))
+        assert eur.to_base(Decimal("108")) == Decimal("100")
 
     def test_from_base_multiplies_by_rate(self):
-        usd = Currency(code="USD", value=Decimal("1.08"))
-        assert usd.from_base(Decimal("100")) == Decimal("108")
+        eur = Currency(code="EUR", value=Decimal("1.08"))
+        assert eur.from_base(Decimal("100")) == Decimal("108")
 
     def test_base_currency_is_identity_even_if_value_drifts(self):
         # The base currency converts 1:1 by definition; a drifted stored
         # value must not corrupt conversions.
-        eur = Currency(code="EUR", value=Decimal("0.9"))
-        assert eur.to_base(Decimal("5")) == Decimal("5")
-        assert eur.from_base(Decimal("5")) == Decimal("5")
+        usd = Currency(code="USD", value=Decimal("0.9"))
+        assert usd.to_base(Decimal("5")) == Decimal("5")
+        assert usd.from_base(Decimal("5")) == Decimal("5")
 
     @override_settings(STAPEL_CURRENCIES={"BASE_CURRENCY": "USD"})
     def test_base_currency_is_a_setting(self):
