@@ -29,7 +29,7 @@ Pre-1.0 semver: **minor = breaking**, patch = compatible.
 
 ## [0.1.0] - 2026-07-04
 
-Initial release. Ported from the `currencies` app of `legacy-catalog`
+Initial release. Ported from the `currencies` app of a legacy catalog codebase
 (Currency model with ISO-code PK, ECB daily-rate refresh, default-currency
 seeding, read-only currency API) onto the Stapel library standard.
 
@@ -69,7 +69,7 @@ seeding, read-only currency API) onto the Stapel library standard.
 - Read-only `CurrencyViewSet` (list + retrieve by ISO code, active only);
   writes stay in the Django admin. Mounted by the host at `currencies/`.
 
-### Changed (vs legacy-catalog)
+### Changed (vs the legacy catalog)
 - Rate updates no longer create-or-skip silently around unknown feed
   codes: unknown codes are reported and never auto-created.
 - All float money math replaced with `Decimal`; API renders `value` as a
