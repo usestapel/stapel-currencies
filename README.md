@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/usestapel/stapel-currencies/actions/workflows/ci.yml/badge.svg)](https://github.com/usestapel/stapel-currencies/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/usestapel/stapel-currencies/graph/badge.svg)](https://codecov.io/gh/usestapel/stapel-currencies)
+[![PyPI](https://img.shields.io/pypi/v/stapel-currencies.svg)](https://pypi.org/project/stapel-currencies/)
 
 > Currencies and exchange rates — configurable base currency, pluggable rate
 > providers (ECB by default), cross-rate conversion as a comm Function
