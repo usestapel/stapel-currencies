@@ -23,13 +23,13 @@ def catalog():
 
 class TestCurrencyList:
     def test_lists_active_currencies_only(self, api_client):
-        resp = api_client.get("/currencies/api/")
+        resp = api_client.get("/currencies/api/v1/")
         assert resp.status_code == 200
         codes = [item["code"] for item in resp.json()]
         assert codes == ["EUR", "USD"]
 
     def test_value_is_a_decimal_string(self, api_client):
-        resp = api_client.get("/currencies/api/")
+        resp = api_client.get("/currencies/api/v1/")
         usd = next(item for item in resp.json() if item["code"] == "USD")
         assert usd["value"] == "1.08000000"
         assert usd["symbol"] == "$"
@@ -38,28 +38,28 @@ class TestCurrencyList:
 
 class TestCurrencyRetrieve:
     def test_retrieve_by_iso_code(self, api_client):
-        resp = api_client.get("/currencies/api/USD/")
+        resp = api_client.get("/currencies/api/v1/USD/")
         assert resp.status_code == 200
         assert resp.json()["code"] == "USD"
 
     def test_optional_trailing_slash(self, api_client):
-        assert api_client.get("/currencies/api/USD").status_code == 200
+        assert api_client.get("/currencies/api/v1/USD").status_code == 200
 
     def test_inactive_currency_is_404(self, api_client):
-        assert api_client.get("/currencies/api/OLD/").status_code == 404
+        assert api_client.get("/currencies/api/v1/OLD/").status_code == 404
 
     def test_unknown_currency_is_404(self, api_client):
-        assert api_client.get("/currencies/api/ZZZ/").status_code == 404
+        assert api_client.get("/currencies/api/v1/ZZZ/").status_code == 404
 
 
 class TestApiIsReadOnly:
     def test_post_is_rejected(self, api_client):
-        resp = api_client.post("/currencies/api/", {"code": "XXX"}, format="json")
+        resp = api_client.post("/currencies/api/v1/", {"code": "XXX"}, format="json")
         assert resp.status_code == 405
 
     def test_put_is_rejected(self, api_client):
-        resp = api_client.put("/currencies/api/USD/", {"value": "9"}, format="json")
+        resp = api_client.put("/currencies/api/v1/USD/", {"value": "9"}, format="json")
         assert resp.status_code == 405
 
     def test_delete_is_rejected(self, api_client):
-        assert api_client.delete("/currencies/api/USD/").status_code == 405
+        assert api_client.delete("/currencies/api/v1/USD/").status_code == 405

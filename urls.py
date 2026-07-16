@@ -1,17 +1,11 @@
-"""URL patterns — no global prefix here, the host project mounts them:
+"""Root URLconf for stapel-currencies — v1 canon mount (api-versioning.md §2, §6).
 
-    path("currencies/", include("stapel_currencies.urls"))
-
-Routes (relative to the mount): ``api/`` (list), ``api/<code>/`` (retrieve).
+Canon: ``/<mod>/api/v1/...``. The host mounts ``include('stapel_currencies.urls')``
+under ``currencies/``; the versioned URL set lives in ``urls_v1.py`` (the
+``api/v1`` segment is the router prefix there).
 """
 from django.urls import include, path
-from stapel_core.django.api.routers import OptionalSlashRouter
-
-from .views import CurrencyViewSet
-
-router = OptionalSlashRouter()
-router.register(r"api", CurrencyViewSet, basename="currency")
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path('', include('stapel_currencies.urls_v1')),
 ]
