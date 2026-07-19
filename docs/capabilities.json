@@ -1,0 +1,55 @@
+{
+  "module": "stapel-currencies",
+  "version": "0.1.6",
+  "provides": "Currencies and exchange rates: a Currency catalog keyed by ISO 4217 code with Decimal rates relative to a configurable base currency, cross-rate conversion (convert()) exposed as a comm Function, a pluggable rate-provider seam (ECB by default), a public read-only HTTP API, and a Celery task / management commands to refresh rates.",
+  "axes": [
+    {
+      "key": "BASE_CURRENCY",
+      "kind": "enum",
+      "default": "USD",
+      "group": "currencies.base",
+      "gates": {
+        "operations": [],
+        "co_gates": []
+      },
+      "curated": {
+        "summary": "ISO 4217 code every Currency.value rate is relative to. The base currency always converts at rate 1. Changing it reinterprets stored rates — re-run update_exchange_rates after switching (conf.py, MODULE.md Extension points table).",
+        "business_label": "Base currency for exchange rates"
+      }
+    },
+    {
+      "key": "CONVERSION_DECIMAL_PLACES",
+      "kind": "enum",
+      "default": 2,
+      "group": "currencies.base",
+      "gates": {
+        "operations": [],
+        "co_gates": []
+      },
+      "curated": {
+        "summary": "Decimal places conversion results are quantized to (ROUND_HALF_UP) in services.convert and the currencies.convert Function (conf.py, MODULE.md).",
+        "business_label": "Conversion result precision"
+      }
+    }
+  ],
+  "extension_points": [
+    {
+      "name": "RATE_PROVIDER",
+      "kind": "dotted_path",
+      "summary": "REPLACE, single strategy: implement the RateProvider ABC (providers.py) and point the setting at it — default ECBRateProvider (ECB eurofxref-daily.xml, rebased when base != EUR); enforced as a RateProvider subclass by get_rate_provider() (conf.py, MODULE.md 'Rate providers')."
+    },
+    {
+      "name": "DEFAULT_CURRENCIES",
+      "kind": "catalog_override",
+      "summary": "Seed list read by the load_default_currencies management command (code/display_name/symbol/value dicts); replaces the default 16-currency list wholesale (conf.py, MODULE.md)."
+    }
+  ],
+  "operations_total": 2,
+  "requires": [
+    {
+      "module": "stapel-core",
+      "optional": false,
+      "reason": "AppSettings config layer, comm Function (currencies.convert), error registry — the only stapel-* dependency (pyproject.toml: 'Depends on stapel-core only'; conf.py:11, functions.py:19, errors.py:6)"
+    }
+  ]
+}
