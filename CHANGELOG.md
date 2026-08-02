@@ -4,6 +4,23 @@ All notable changes to stapel-currencies are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Pre-1.0 semver: **minor = breaking**, patch = compatible.
 
+## [0.1.8] - 2026-08-02
+
+### Added
+- `docs/llms.txt` — the fifth contract artifact, an agent-sized slice of the
+  hand-authored `docs/capabilities.json`, wired into `make contract` /
+  `make contract-check` (badge-canon §3). `docs/capabilities.json`'s
+  `version` field resynced to `pyproject.toml` (it had drifted to 0.1.6
+  across the 0.1.7 release).
+- Badge canon in README, classifier 3.14, `migration-lint` enabled in CI.
+- CI matrix now tests Python 3.14 (the version actually in production),
+  alongside the existing 3.11-3.13.
+
+### Fixed
+- `docs/capabilities.json`, `docs/flows.json`, `docs/errors.json`,
+  `docs/llms.txt` and `CONFIG.MD` now ship in the wheel via `package-data`
+  (#184); previously repo-only, invisible to `--from-installed` tooling.
+
 ## [0.1.6] - 2026-07-17
 
 Fleet follow-up to stapel-core 0.12.0 (legacy shim sweep). No source

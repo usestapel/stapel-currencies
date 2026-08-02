@@ -1,6 +1,6 @@
 {
   "module": "stapel-currencies",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "provides": "Currencies and exchange rates: a Currency catalog keyed by ISO 4217 code with Decimal rates relative to a configurable base currency, cross-rate conversion (convert()) exposed as a comm Function, a pluggable rate-provider seam (ECB by default), a public read-only HTTP API, and a Celery task / management commands to refresh rates.",
   "axes": [
     {
