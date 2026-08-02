@@ -6,6 +6,7 @@
 [![downloads](https://static.pepy.tech/badge/stapel-currencies/month)](https://pepy.tech/project/stapel-currencies)
 [![python](https://img.shields.io/pypi/pyversions/stapel-currencies?logo=python&logoColor=white)](https://pypi.org/project/stapel-currencies/)
 [![license](https://img.shields.io/github/license/usestapel/stapel-currencies)](https://github.com/usestapel/stapel-currencies/blob/main/LICENSE)
+[![llms.txt](https://img.shields.io/badge/llms.txt-blue)](https://github.com/usestapel/stapel-currencies/blob/main/docs/llms.txt)
 
 > Currencies and exchange rates — configurable base currency, pluggable rate
 > providers (ECB by default), cross-rate conversion as a comm Function
