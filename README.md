@@ -1,8 +1,11 @@
 # stapel-currencies
 
-[![CI](https://github.com/usestapel/stapel-currencies/actions/workflows/ci.yml/badge.svg)](https://github.com/usestapel/stapel-currencies/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/usestapel/stapel-currencies/graph/badge.svg)](https://codecov.io/gh/usestapel/stapel-currencies)
-[![PyPI](https://img.shields.io/pypi/v/stapel-currencies.svg)](https://pypi.org/project/stapel-currencies/)
+[![CI](https://img.shields.io/github/actions/workflow/status/usestapel/stapel-currencies/ci.yml?branch=main&logo=github&label=CI)](https://github.com/usestapel/stapel-currencies/actions/workflows/ci.yml?query=branch%3Amain)
+[![coverage](https://img.shields.io/codecov/c/github/usestapel/stapel-currencies?branch=main&logo=codecov&label=coverage)](https://app.codecov.io/gh/usestapel/stapel-currencies)
+[![pypi](https://img.shields.io/pypi/v/stapel-currencies?logo=pypi&logoColor=white&label=pypi)](https://pypi.org/project/stapel-currencies/)
+[![downloads](https://static.pepy.tech/badge/stapel-currencies/month)](https://pepy.tech/project/stapel-currencies)
+[![python](https://img.shields.io/pypi/pyversions/stapel-currencies?logo=python&logoColor=white)](https://pypi.org/project/stapel-currencies/)
+[![license](https://img.shields.io/github/license/usestapel/stapel-currencies)](https://github.com/usestapel/stapel-currencies/blob/main/LICENSE)
 
 > Currencies and exchange rates — configurable base currency, pluggable rate
 > providers (ECB by default), cross-rate conversion as a comm Function
