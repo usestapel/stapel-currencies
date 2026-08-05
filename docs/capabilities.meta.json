@@ -1,0 +1,29 @@
+{
+  "_comment": "Curated layer for the `surface` section of docs/capabilities.json (discoverability-design.md §1.2). NOTE the honest boundary: stapel-currencies' capabilities.json is otherwise still HAND-WRITTEN (git log: authored for the stapel-catalog sweep) — provides/axes/extension_points/operations_total are not derived from code here. `make contract` patches in the two derivable things: module/version from pyproject and the derived `surface`. Converting the rest of the document to an emitter is separate work.",
+
+  "surface_roots": [
+    {"select": "functions", "path": "services.py"}
+  ],
+
+  "surface": {
+    "convert": {
+      "kind": "gate_function",
+      "intent": "Convert a Decimal amount between two active currencies via the base-currency cross rate, quantized to CONVERSION_DECIMAL_PLACES (ROUND_HALF_UP). Call this instead of reading Currency.value rows and dividing/multiplying by hand — the base-currency short-circuit, the active-currency check and the rounding rule are each an easy place to drift from the framework's answer.",
+      "instead_of": [
+        "Currency.value ratio computed and rounded by hand",
+        "float-based exchange-rate arithmetic"
+      ]
+    },
+    "get_rate_provider": {
+      "kind": "factory",
+      "intent": "Instantiate the configured STAPEL_CURRENCIES['RATE_PROVIDER'] (validated as a RateProvider subclass). Reach for this instead of resolving/import_string-ing the setting yourself whenever you need today's rates without persisting them — e.g. a preview endpoint that shows what update_exchange_rates would change."
+    },
+    "update_exchange_rates": {
+      "kind": "gate_function",
+      "intent": "Fetch rates from the configured RATE_PROVIDER and update the Currency rows in one call — the same seam the Celery task and the update_exchange_rates management command already use. Call it from your own scheduler or admin action instead of re-implementing the fetch-then-save loop.",
+      "instead_of": [
+        "hand-rolled rate-source fetch + Currency.save() loop"
+      ]
+    }
+  }
+}

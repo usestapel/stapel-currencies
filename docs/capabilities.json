@@ -44,6 +44,33 @@
       "summary": "Seed list read by the load_default_currencies management command (code/display_name/symbol/value dicts); replaces the default 16-currency list wholesale (conf.py, MODULE.md)."
     }
   ],
+  "surface": [
+    {
+      "name": "convert",
+      "kind": "gate_function",
+      "path": "stapel_currencies.services.convert",
+      "intent": "Convert a Decimal amount between two active currencies via the base-currency cross rate, quantized to CONVERSION_DECIMAL_PLACES (ROUND_HALF_UP). Call this instead of reading Currency.value rows and dividing/multiplying by hand — the base-currency short-circuit, the active-currency check and the rounding rule are each an easy place to drift from the framework's answer.",
+      "instead_of": [
+        "Currency.value ratio computed and rounded by hand",
+        "float-based exchange-rate arithmetic"
+      ]
+    },
+    {
+      "name": "get_rate_provider",
+      "kind": "factory",
+      "path": "stapel_currencies.services.get_rate_provider",
+      "intent": "Instantiate the configured STAPEL_CURRENCIES['RATE_PROVIDER'] (validated as a RateProvider subclass). Reach for this instead of resolving/import_string-ing the setting yourself whenever you need today's rates without persisting them — e.g. a preview endpoint that shows what update_exchange_rates would change."
+    },
+    {
+      "name": "update_exchange_rates",
+      "kind": "gate_function",
+      "path": "stapel_currencies.services.update_exchange_rates",
+      "intent": "Fetch rates from the configured RATE_PROVIDER and update the Currency rows in one call — the same seam the Celery task and the update_exchange_rates management command already use. Call it from your own scheduler or admin action instead of re-implementing the fetch-then-save loop.",
+      "instead_of": [
+        "hand-rolled rate-source fetch + Currency.save() loop"
+      ]
+    }
+  ],
   "operations_total": 2,
   "requires": [
     {
