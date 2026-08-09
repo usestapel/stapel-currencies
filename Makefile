@@ -25,10 +25,17 @@ migration-lint:
 # Second: docs/llms.txt — the fifth contract artifact (badge-canon §3,
 # stapel_tools.llms_txt), an agent-sized slice of docs/capabilities.json,
 # rendered straight from the capabilities.json the step above produces.
+#
+# Third: assemble README.md (stapel_tools.readme) from docs/readme.md — the
+# human half, the only file a person edits — plus the artifacts above. The
+# badge row, the version, the surface counts and every doc link are generated,
+# so they cannot lag a release the way a hand-written README always has.
 contract:
 	$(PYTHON) -m stapel_tools.surface . --patch
 	$(PYTHON) -m stapel_tools.llms_txt .
+	$(PYTHON) -m stapel_tools.readme .
 
 contract-check:
 	$(PYTHON) -m stapel_tools.surface . --patch --check
 	$(PYTHON) -m stapel_tools.llms_txt . --check
+	$(PYTHON) -m stapel_tools.readme . --check
