@@ -122,6 +122,13 @@ documented exception per library-standard §3.4.
 |---|---|---|
 | `CurrencyViewSet` | `currency-list`, `currency-detail` | `CurrencySerializer` (`value` rendered as a decimal string) |
 
+Mounted by the host at `currencies/`, the public surface is
+`GET /currencies/api/v1/` (the active catalog, ordered by code) and
+`GET /currencies/api/v1/{code}/`. Both are `AllowAny`; the trailing slash is
+optional (`OptionalSlashRouter`). `{code}` is **case-insensitive** — the URL
+regex has always admitted `usd`, and since 0.1.9 the lookup upper-cases it
+instead of answering 404 for a code the route accepted.
+
 ### Events & functions (comm surface)
 
 Transport-agnostic via `stapel_core.comm` (in-process in a monolith, bus in
@@ -154,7 +161,27 @@ working off stored rates, so it must not block deploys:
 
 `error.400.unknown_currency`, `error.400.invalid_amount`, `error.502.rate_fetch_failed`
 — registered via `register_service_errors`; human-readable strings are translations,
-never literals in responses.
+never literals in responses. This module owns those three keys and therefore ships
+their catalogues in the same release: `translations/errors.ru.json` and
+`translations/errors.es.json` (gated by `tests/test_translations.py`).
+
+### Contract artifacts (`docs/`, `make contract`)
+
+This module emits its own contract triad from a single-module `{currencies + core}`
+Django instance mounted at the canonical `/currencies/api/v1/` prefix
+(`_codegen.py` / `_codegen_settings.py` / `codegen_urls.py`):
+
+| Artifact | Content |
+|---|---|
+| `docs/schema.json` | drf-spectacular OpenAPI — the two read-only operations, the `Currency` component |
+| `docs/flows.json` | `[]` — a read-only catalog annotates no `@flow_step` |
+| `docs/errors.json` | `generate_error_keys` registry (this module's three keys plus the core keys any mounted instance can raise) |
+| `docs/capabilities.json`, `docs/llms.txt`, `README.md` | as before (`surface` patched, llms.txt/README assembled) |
+
+All six ship in the wheel, so `stapel-catalog --from-installed` and a frontend
+codegen read the contract off the lockfile rather than off somebody's discipline.
+`make contract-check` is the drift gate; `tests/test_contract_triad.py` is the
+authoritative one (it runs in CI and skips off the Python 3.12 emission pin).
 
 ## Anti-patterns
 

@@ -1,0 +1,5 @@
+{
+  "error.400.invalid_amount": "El importe no es un número decimal válido",
+  "error.400.unknown_currency": "Código de moneda desconocido o inactivo",
+  "error.502.rate_fetch_failed": "La fuente de tipos de cambio no está disponible"
+}

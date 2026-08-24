@@ -1,0 +1,123 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "",
+    "version": "0.0.0"
+  },
+  "paths": {
+    "/currencies/api/v1/": {
+      "get": {
+        "operationId": "currencies_api_v1_list",
+        "description": "Public read-only currency catalog (list + retrieve by ISO code).\n\nWrites happen through the Django admin (staff), the management\ncommands, or the rate-update task — never through this API.\n\nThe serializer seam here is DRF's own: subclass, set\n``serializer_class`` (or override ``get_serializer_class()``) and\nremount the URL in the host project.\n\n**Permissions:** `AllowAny`",
+        "tags": [
+          "Currencies and exchange rates"
+        ],
+        "security": [
+          {
+            "JWTCookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Currency"
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/currencies/api/v1/{code}/": {
+      "get": {
+        "operationId": "currencies_api_v1_retrieve",
+        "description": "Public read-only currency catalog (list + retrieve by ISO code).\n\nWrites happen through the Django admin (staff), the management\ncommands, or the rate-update task — never through this API.\n\nThe serializer seam here is DRF's own: subclass, set\n``serializer_class`` (or override ``get_serializer_class()``) and\nremount the URL in the host project.\n\n**Permissions:** `AllowAny`",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "schema": {
+              "type": "string",
+              "description": "ISO 4217 currency code (e.g., EUR, USD, GBP)"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "Currencies and exchange rates"
+        ],
+        "security": [
+          {
+            "JWTCookieAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Currency"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Currency": {
+        "type": "object",
+        "description": "``value`` is rendered as a decimal string — floats never touch money.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "ISO 4217 currency code (e.g., EUR, USD, GBP)",
+            "maxLength": 3
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Translation key for currency name (e.g., 'currency.eur')",
+            "maxLength": 100
+          },
+          "value": {
+            "type": "string",
+            "format": "decimal",
+            "pattern": "^-?\\d{0,12}(?:\\.\\d{0,8})?$",
+            "description": "Exchange rate relative to the configured base currency (base = 1)"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Currency symbol (e.g., €, $, £)",
+            "maxLength": 5
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "display_name"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "JWTCookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "stapel_jwt",
+        "description": "JWT token stored in cookie. Login via /auth/admin/ to get the cookie."
+      }
+    }
+  }
+}

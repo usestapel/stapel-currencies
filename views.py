@@ -22,3 +22,18 @@ class CurrencyViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CurrencySerializer
     permission_classes = [permissions.AllowAny]
     lookup_value_regex = "[A-Za-z]{3}"
+
+    def get_object(self):
+        """Resolve the ISO code case-insensitively.
+
+        ``lookup_value_regex`` admits ``usd`` but the primary key is stored
+        upper-case, so an exact lookup answered 404 for a code the URL had
+        already accepted. Normalise here rather than widening the regex or
+        the query: the catalog is canonically upper-case and every other
+        surface (comm, admin, the seed list) says so too.
+        """
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        code = self.kwargs.get(lookup_url_kwarg)
+        if isinstance(code, str):
+            self.kwargs[lookup_url_kwarg] = code.upper()
+        return super().get_object()

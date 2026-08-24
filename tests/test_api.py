@@ -45,6 +45,19 @@ class TestCurrencyRetrieve:
     def test_optional_trailing_slash(self, api_client):
         assert api_client.get("/currencies/api/v1/USD").status_code == 200
 
+    @pytest.mark.parametrize("code", ["usd", "Usd", "uSD"])
+    def test_iso_code_is_case_insensitive(self, api_client, code):
+        """The URL regex admits any case; the primary key is upper-case. A
+        route that accepts `usd` and then answers 404 is a trap, not a
+        contract — every client hand-upper-cased instead."""
+        resp = api_client.get(f"/currencies/api/v1/{code}/")
+        assert resp.status_code == 200
+        assert resp.json()["code"] == "USD"
+
+    def test_lower_case_inactive_currency_is_still_404(self, api_client):
+        """Case folding widens the lookup, not the catalog."""
+        assert api_client.get("/currencies/api/v1/old/").status_code == 404
+
     def test_inactive_currency_is_404(self, api_client):
         assert api_client.get("/currencies/api/v1/OLD/").status_code == 404
 

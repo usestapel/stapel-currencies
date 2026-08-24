@@ -4,6 +4,34 @@ All notable changes to stapel-currencies are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Pre-1.0 semver: **minor = breaking**, patch = compatible.
 
+## [0.1.9] - 2026-08-24
+
+### Added
+- **Own contract triad** (`_codegen.py` / `_codegen_settings.py` /
+  `codegen_urls.py`, `make contract`): `docs/schema.json`, `docs/flows.json`
+  and `docs/errors.json` are now build artifacts of this repo, emitted from a
+  single-module `{currencies + core}` Django instance mounted at the canonical
+  `/currencies/api/v1/` prefix (contract-pipeline.md §2-3). Until now the only
+  OpenAPI for this module lived inside a host's aggregate, so nothing could
+  generate a client for it from the lockfile — the gap `@stapel/currencies-react`
+  hit (BACKEND-GAP X-1/C-1). `make contract-check` is the drift gate;
+  `tests/test_contract_triad.py` gates it in CI (determinism, `$ref` closure,
+  canonical prefix, the two-read-only-operations surface).
+- **Error catalogues** `translations/errors.ru.json` / `translations/errors.es.json`
+  for the three keys this module owns. Owning a key means shipping its
+  translations in the same release; `tests/test_translations.py` runs the core
+  gate (coverage, `{param}` parity, registry-export pairing) so they cannot fall
+  behind `errors.py`.
+- `docs/schema.json` and `translations/*.json` added to `package-data` — the
+  contract ships in the wheel.
+
+### Fixed
+- `GET /currencies/api/v1/{code}/` resolves the ISO code **case-insensitively**.
+  `lookup_value_regex` admitted `usd`, but the primary key is stored upper-case,
+  so a route that accepted the URL then answered 404 — every client
+  hand-upper-cased around it (BACKEND-GAP C-5). Case folding widens the lookup,
+  not the catalog: an inactive code is still 404.
+
 ## [0.1.8] - 2026-08-02
 
 ### Added

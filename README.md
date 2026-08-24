@@ -24,17 +24,18 @@ pip install stapel-currencies
 
 | Fact | Value |
 |---|---|
-| Version | `0.1.8` |
+| Version | `0.1.9` |
 | Python | `>=3.11` (3.11, 3.12, 3.13, 3.14) |
 | HTTP operations | 2 |
 | Config axes | 2 |
 | Usage surface | 3 |
 | Extension points | 2 |
+| Error codes | 45 |
 | Fleet dependencies | [`stapel-core`](https://github.com/usestapel/stapel-core) |
 
 ## Documentation
 
-[capabilities.json](https://github.com/usestapel/stapel-currencies/blob/main/docs/capabilities.json) · [llms.txt (for agents)](https://github.com/usestapel/stapel-currencies/blob/main/docs/llms.txt)
+[OpenAPI](https://github.com/usestapel/stapel-currencies/blob/main/docs/schema.json) · [capabilities.json](https://github.com/usestapel/stapel-currencies/blob/main/docs/capabilities.json) · [llms.txt (for agents)](https://github.com/usestapel/stapel-currencies/blob/main/docs/llms.txt)
 
 ## Quick start
 

@@ -1,8 +1,8 @@
-# stapel-currencies 0.1.8
+# stapel-currencies 0.1.9
 
 Currencies and exchange rates: a Currency catalog keyed by ISO 4217 code with Decimal rates relative to a configurable base currency, cross-rate conversion (convert()) exposed as a comm Function, a pluggable rate-provider seam (ECB by default), a public read-only HTTP API, and a Celery task / management commands to refresh rates.
 
-Contract: axes 2 · surface 3 · extension points 2.
+Contract: axes 2 · surface 3 · extension points 2 · operations 2 · error codes 45.
 Generated from docs/capabilities.json by `stapel-llms-txt` — do not edit; drift-gated by `make contract-check`.
 
 ## Configuration axes — what a product switches on
@@ -33,3 +33,57 @@ This is the answer to "does Stapel already have something for X?". `instead of` 
 
 ## Fits with — fleet dependencies
 - stapel-core (required) — AppSettings config layer, comm Function (currencies.convert), error registry — the only stapel-* dependency (pyproject.toml: 'Depends on stapel-core only'; conf.py:11, functions.py:19, errors.py:6)
+
+## HTTP operations (2) — call by operationId, never by a typed path
+Paths are relative to `/currencies/api/v1/`.
+### Currencies and exchange rates
+- GET / — currencies_api_v1_list
+- GET /{code}/ — currencies_api_v1_retrieve
+
+## Error codes (45) — the StapelError envelope
+Render `t(code, params)`; branch UX on the remediation. Localized text lives in docs/errors.<lang>.md, not here.
+- error.400.bad_request [400] fix_input
+- error.400.captcha_invalid [400] retry
+- error.400.captcha_required [400] retry
+- error.400.expected_list [400] fix_input
+- error.400.field.blank [400] fix_input {field}
+- error.400.field.does_not_exist [400] fix_input {field}
+- error.400.field.invalid [400] fix_input {field}
+- error.400.field.invalid_choice [400] fix_input {field}
+- error.400.field.max_length [400] fix_input {field,max_length}
+- error.400.field.max_value [400] fix_input {field,max_value}
+- error.400.field.min_length [400] fix_input {field,min_length}
+- error.400.field.min_value [400] fix_input {field,min_value}
+- error.400.field.null [400] fix_input {field}
+- error.400.field.required [400] fix_input {field}
+- error.400.field.unique [400] fix_input {field}
+- error.400.invalid_ad_id [400] fix_input
+- error.400.invalid_amount [400] fix_input
+- error.400.unknown_currency [400] fix_input
+- error.400.validation_error [400] fix_input
+- error.400.verification_failed [400] verify
+- error.400.verification_invalid_factor [400] verify
+- error.401.unauthorized [401] reauthenticate
+- error.402.payment_required [402] retry
+- error.403.forbidden [403] retry
+- error.403.network_blocked [403] contact_support
+- error.403.verification_enrollment_required [403] verify
+- error.403.verification_required [403] verify
+- error.404.ad_not_found [404] retry
+- error.404.not_found [404] retry
+- error.404.verification_challenge_not_found [404] verify
+- error.405.method_not_allowed [405] retry
+- error.406.not_acceptable [406] retry
+- error.408.request_timeout [408] retry
+- error.409.conflict [409] fix_input
+- error.410.gone [410] retry
+- error.413.payload_too_large [413] retry
+- error.415.unsupported_media_type [415] retry
+- error.422.unprocessable_entity [422] wait_and_retry
+- error.423.locked [423] wait_and_retry
+- error.423.verification_locked [423] wait_and_retry
+- error.429.rate_limit [429] wait_and_retry {retry_after_minutes}
+- error.429.too_many_requests [429] wait_and_retry
+- error.500.internal [500] contact_support
+- error.502.rate_fetch_failed [502] retry
+- error.503.mandate_unavailable [503] retry

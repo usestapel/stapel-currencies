@@ -1,7 +1,9 @@
 """i18n error keys of stapel-currencies.
 
 Only ``error.<status>.<slug>`` keys leave this package — human-readable
-strings are translations, never literals in responses.
+strings are translations, never literals in responses. The English registry
+below is the source; ``translations/errors.<lang>.json`` ships the localized
+catalogues in the same release (owning keys means shipping their catalogues).
 """
 from stapel_core.django.api.errors import register_service_errors
 
