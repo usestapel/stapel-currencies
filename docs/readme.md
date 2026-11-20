@@ -19,7 +19,7 @@ python manage.py load_default_currencies
 python manage.py update_exchange_rates          # ECB by default; --dry-run supported
 ```
 
-Or schedule the Celery task:
+Or, in a host that runs celery beat, schedule the task:
 
 ```python
 CELERY_BEAT_SCHEDULE = {

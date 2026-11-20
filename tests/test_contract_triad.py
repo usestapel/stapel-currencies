@@ -42,7 +42,7 @@ if _PY != (3, 12):
 
 REPO = Path(__file__).resolve().parent.parent
 DOCS = REPO / "docs"
-TRIAD = ("schema.json", "flows.json", "errors.json")
+TRIAD = ("schema.json", "schema.v2.json", "flows.json", "errors.json")
 
 
 def _emit(out_dir: Path) -> None:

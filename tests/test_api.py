@@ -62,7 +62,10 @@ class TestCurrencyRetrieve:
         assert api_client.get("/currencies/api/v1/OLD/").status_code == 404
 
     def test_unknown_currency_is_404(self, api_client):
-        assert api_client.get("/currencies/api/v1/ZZZ/").status_code == 404
+        resp = api_client.get("/currencies/api/v1/ZZZ/")
+        assert resp.status_code == 404
+        # The key schema.v2.json binds to retrieve's 404.
+        assert resp.json()["localizable_error"] == "error.404.not_found"
 
 
 class TestApiIsReadOnly:

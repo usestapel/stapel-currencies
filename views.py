@@ -1,6 +1,8 @@
 """DRF views for stapel-currencies."""
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, viewsets
+from stapel_core.django.api.errors import ERR_404_NOT_FOUND
+from stapel_core.django.openapi.contract import raises
 
 from .models import Currency
 from .serializers import CurrencySerializer
@@ -37,3 +39,9 @@ class CurrencyViewSet(viewsets.ReadOnlyModelViewSet):
         if isinstance(code, str):
             self.kwargs[lookup_url_kwarg] = code.upper()
         return super().get_object()
+
+    @raises(ERR_404_NOT_FOUND)
+    def retrieve(self, request, *args, **kwargs):
+        """An unknown or inactive code is core's ``error.404.not_found``
+        (DRF's ``Http404`` through the core exception handler)."""
+        return super().retrieve(request, *args, **kwargs)

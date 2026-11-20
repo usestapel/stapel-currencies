@@ -23,6 +23,10 @@ def pytest_configure(config):
             DEFAULT_AUTO_FIELD="django.db.models.BigAutoField",
             USE_TZ=True,
             ROOT_URLCONF="stapel_currencies.tests.urls",
+            # The production envelope: what a client reads on an error.
+            REST_FRAMEWORK={
+                "EXCEPTION_HANDLER": "stapel_core.django.api.errors.stapel_exception_handler",
+            },
             CACHES={
                 "default": {
                     "BACKEND": "django.core.cache.backends.locmem.LocMemCache",

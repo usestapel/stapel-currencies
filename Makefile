@@ -61,7 +61,7 @@ contract-check:
 	tmp=$$(mktemp -d); \
 	$(PYTHON) -m stapel_currencies._codegen --out "$$tmp" || { rm -rf "$$tmp"; exit 1; }; \
 	rc=0; \
-	for f in schema.json flows.json errors.json; do \
+	for f in schema.json schema.v2.json flows.json errors.json; do \
 		if ! cmp -s "docs/$$f" "$$tmp/$$f"; then \
 			echo "DRIFT: docs/$$f is stale — run 'make contract' and commit it"; \
 			diff "docs/$$f" "$$tmp/$$f" | head -20; rc=1; \
@@ -70,7 +70,7 @@ contract-check:
 	rm -rf "$$tmp"; \
 	$(PYTHON) -m stapel_tools.llms_txt . --check || rc=1; \
 	$(PYTHON) -m stapel_tools.readme . --check || rc=1; \
-	if [ $$rc -eq 0 ]; then echo "contract-check: docs/{schema,flows,errors,capabilities,llms.txt} + README.md up to date"; fi; \
+	if [ $$rc -eq 0 ]; then echo "contract-check: docs/{schema,schema.v2,flows,errors,capabilities,llms.txt} + README.md up to date"; fi; \
 	exit $$rc
 
 lint:

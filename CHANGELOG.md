@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.1.10] — 2026-11-20
+
+Patch. No migration. Requires stapel-core 0.99.2. A host that schedules the
+celery task keeps celery in its own requirements (it always had it for beat).
+
+- **Celery is not a dependency.** `tasks.py` imported it at module level and
+  the package declared `celery>=5` for that import. The rate refresh is a
+  plain callable; with celery installed it is also registered as the task
+  `stapel_currencies.tasks.update_exchange_rates` (same name as before).
+  `tests/test_celery_optional.py` imports it with celery unimportable.
+- **Contract profile 2:** `docs/schema.v2.json` beside the unchanged-profile
+  `docs/schema.json`; retrieve binds `error.404.not_found` (declared with
+  core's `raises`, asserted against the wire envelope — the test harness now
+  runs the production exception handler).
+- `errors.json` regenerated under stapel-core 0.99.
+- Gates: `tests/test_contract_profile2.py` on stapel-tools 0.84.0's
+  `contract_gates`; CI installs stapel-tools>=0.84.0 and celery for the suite.
+
 All notable changes to stapel-currencies are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Pre-1.0 semver: **minor = breaking**, patch = compatible.

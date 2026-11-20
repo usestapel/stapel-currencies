@@ -1,6 +1,10 @@
-"""Celery tasks of stapel-currencies.
+"""Scheduled jobs of stapel-currencies.
 
-Schedule the daily rate refresh in the host project::
+Celery is optional: ``update_exchange_rates`` is a plain callable a cron job
+or the ``update_exchange_rates`` management command can invoke. When celery is
+installed it is also registered as a celery task under
+:data:`UPDATE_EXCHANGE_RATES_TASK`. Schedule the daily rate refresh in a host
+that runs celery beat::
 
     CELERY_BEAT_SCHEDULE = {
         "update-exchange-rates": {
@@ -14,12 +18,11 @@ The task goes through the same ``RATE_PROVIDER`` seam as the
 """
 import logging
 
-from celery import shared_task
-
 logger = logging.getLogger(__name__)
 
+UPDATE_EXCHANGE_RATES_TASK = "stapel_currencies.tasks.update_exchange_rates"
 
-@shared_task
+
 def update_exchange_rates() -> int:
     """Fetch rates from the configured provider and update the database.
 
@@ -41,3 +44,12 @@ def update_exchange_rates() -> int:
             "Currencies not in database: %s", ", ".join(stats["not_found"])
         )
     return len(stats["updated"])
+
+
+try:
+    from celery import shared_task
+except ImportError:
+    shared_task = None
+
+if shared_task is not None:
+    update_exchange_rates = shared_task(name=UPDATE_EXCHANGE_RATES_TASK)(update_exchange_rates)

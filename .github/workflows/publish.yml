@@ -116,10 +116,10 @@ jobs:
         run: python -c "import stapel_currencies; print('import OK')"
 
       - name: Install stapel-tools (несёт эмиттер, против которого меряет дрейф-гейт)
-        run: pip install stapel-tools --quiet
+        run: pip install "stapel-tools>=0.84.0,<1" --quiet
 
       - name: Install test dependencies
-        run: pip install pytest pytest-django pytest-cov
+        run: pip install pytest pytest-django pytest-cov celery "stapel-tools>=0.84.0,<1"
 
       - name: Tests with coverage
         run: |

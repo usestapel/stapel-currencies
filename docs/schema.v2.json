@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "",
+    "version": "0.0.0",
+    "x-stapel-contract": 2
+  },
+  "paths": {
+    "/currencies/api/v1/": {
+      "get": {
+        "operationId": "currencies_api_v1_list",
+        "description": "Public read-only currency catalog (list + retrieve by ISO code).\n\nWrites happen through the Django admin (staff), the management\ncommands, or the rate-update task — never through this API.\n\nThe serializer seam here is DRF's own: subclass, set\n``serializer_class`` (or override ``get_serializer_class()``) and\nremount the URL in the host project.\n\n**Permissions:** `AllowAny`",
+        "tags": [
+          "Currencies and exchange rates"
+        ],
+        "security": [
+          {
+            "JWTCookieAuth": []
+          },
+          {
+            "JWTBearerAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Currency"
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/currencies/api/v1/{code}/": {
+      "get": {
+        "operationId": "currencies_api_v1_retrieve",
+        "description": "An unknown or inactive code is core's ``error.404.not_found``\n(DRF's ``Http404`` through the core exception handler).\n\n**Permissions:** `AllowAny`",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "schema": {
+              "type": "string",
+              "description": "ISO 4217 currency code (e.g., EUR, USD, GBP)"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "Currencies and exchange rates"
+        ],
+        "security": [
+          {
+            "JWTCookieAuth": []
+          },
+          {
+            "JWTBearerAuth": []
+          },
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Currency"
+                }
+              }
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StapelError"
+                }
+              }
+            },
+            "description": "Not Found",
+            "x-stapel-errors": [
+              "error.404.not_found"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Currency": {
+        "type": "object",
+        "description": "``value`` is rendered as a decimal string — floats never touch money.",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "ISO 4217 currency code (e.g., EUR, USD, GBP)",
+            "maxLength": 3
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Translation key for currency name (e.g., 'currency.eur')",
+            "maxLength": 100
+          },
+          "value": {
+            "type": "string",
+            "format": "decimal",
+            "pattern": "^-?\\d{0,12}(?:\\.\\d{0,8})?$",
+            "description": "Exchange rate relative to the configured base currency (base = 1)"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Currency symbol (e.g., €, $, £)",
+            "maxLength": 5
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "display_name"
+        ]
+      },
+      "StapelError": {
+        "type": "object",
+        "description": "Structured error returned by all Stapel API endpoints.",
+        "properties": {
+          "localizable_error": {
+            "type": "string",
+            "description": "Translation key for client-side localization",
+            "example": "error.404.not_found"
+          },
+          "error": {
+            "type": "string",
+            "description": "Human-readable fallback/debug message — not reliably English,"
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Context values for template placeholders",
+            "example": {
+              "retry_after": 30
+            }
+          },
+          "error_language": {
+            "type": "string",
+            "description": "The language `error` is written in (e.g. 'en', 'ru'),"
+          }
+        },
+        "required": [
+          "error",
+          "localizable_error"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "JWTBearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT access token in the `Authorization: Bearer <token>` header — the credential a native client sends. When the JWT cookie is also present, the cookie wins."
+      },
+      "JWTCookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "stapel_jwt",
+        "description": "JWT token stored in cookie. Login via /auth/admin/ to get the cookie."
+      }
+    }
+  }
+}

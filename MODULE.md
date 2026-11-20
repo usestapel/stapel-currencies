@@ -8,7 +8,7 @@ communication goes through `stapel-core` (comm bus, signals, registries). Everyt
 below is verifiable against the code in this repo.
 
 - Package: `stapel-currencies` (PyPI), Python package `stapel_currencies`, Django app label `currencies`.
-- Depends on `stapel-core` only (plus `requests` for the ECB provider and `celery` for the rate-refresh task).
+- Depends on `stapel-core` only (plus `requests` for the ECB provider). Celery is optional: with it installed the rate refresh is also a celery task.
 - Provenance: ported from the legacy catalog's `currencies` app with the base currency and rate
   source turned into seams and a comm Function added (see CHANGELOG 0.1.0).
 
@@ -21,7 +21,7 @@ below is verifiable against the code in this repo.
 | Providers (`providers.py`) | `RateProvider` ABC (the rate-source seam), `ECBRateProvider` default (ECB `eurofxref-daily.xml`, rebased when the base currency is not EUR), `RateFetchError`. |
 | HTTP API (`urls.py`, `views.py`) | `CurrencyViewSet` — public read-only list/retrieve of active currencies (`api/`, `api/<code>/` relative to the host mount, e.g. `currencies/`). Writes go through the Django admin. |
 | comm surface (`functions.py`, `schemas/`) | Function `currencies.convert` — decimal-string amounts on the wire, schema-validated. |
-| Tasks & commands | Celery task `stapel_currencies.tasks.update_exchange_rates`; management commands `load_default_currencies` (seed from settings) and `update_exchange_rates` (same provider seam, `--dry-run`). |
+| Tasks & commands | `stapel_currencies.tasks.update_exchange_rates` (a plain callable; a celery task named the same when celery is installed); management commands `load_default_currencies` (seed from settings) and `update_exchange_rates` (same provider seam, `--dry-run`). |
 | Public API (`__init__.py`, PEP 562 lazy) | `__all__ = ["ECBRateProvider", "RateFetchError", "RateProvider", "UnknownCurrencyError", "convert", "currencies_settings"]` |
 
 Money/rate discipline: **strings on the wire, `Decimal` internally, floats never.**

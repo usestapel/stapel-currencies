@@ -24,13 +24,13 @@ pip install stapel-currencies
 
 | Fact | Value |
 |---|---|
-| Version | `0.1.9` |
+| Version | `0.1.10` |
 | Python | `>=3.11` (3.11, 3.12, 3.13, 3.14) |
 | HTTP operations | 2 |
 | Config axes | 2 |
 | Usage surface | 3 |
 | Extension points | 2 |
-| Error codes | 45 |
+| Error codes | 46 |
 | Fleet dependencies | [`stapel-core`](https://github.com/usestapel/stapel-core) |
 
 ## Documentation
@@ -58,7 +58,7 @@ python manage.py load_default_currencies
 python manage.py update_exchange_rates          # ECB by default; --dry-run supported
 ```
 
-Or schedule the Celery task:
+Or, in a host that runs celery beat, schedule the task:
 
 ```python
 CELERY_BEAT_SCHEDULE = {

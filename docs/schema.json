@@ -38,7 +38,7 @@
     "/currencies/api/v1/{code}/": {
       "get": {
         "operationId": "currencies_api_v1_retrieve",
-        "description": "Public read-only currency catalog (list + retrieve by ISO code).\n\nWrites happen through the Django admin (staff), the management\ncommands, or the rate-update task — never through this API.\n\nThe serializer seam here is DRF's own: subclass, set\n``serializer_class`` (or override ``get_serializer_class()``) and\nremount the URL in the host project.\n\n**Permissions:** `AllowAny`",
+        "description": "An unknown or inactive code is core's ``error.404.not_found``\n(DRF's ``Http404`` through the core exception handler).\n\n**Permissions:** `AllowAny`",
         "parameters": [
           {
             "in": "path",
